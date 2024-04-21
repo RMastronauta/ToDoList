@@ -1,12 +1,15 @@
 package com.todolist.todolist.service;
 
+import com.todolist.todolist.dto.result;
+import com.todolist.todolist.enums.statusEnum;
 import com.todolist.todolist.entity.Task;
 import com.todolist.todolist.repository.TaskRepository;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -19,21 +22,52 @@ public class TaskServiceIpml {
     public Task getTaskById(long id){
         return task_repository.getById(id);
     }
-    public Task postTask(Task task){
+    public Task postTask(Task task, result result){
+        task.setCreatedAt(LocalDate.now());
+        if(task.isTaskLivre()){
+            if(validaParametros(task, result))
+                return null;
+        }else if(task.getPrazo() > 0 ){
+            task.setDataFim(LocalDate.now().plusDays(task.getPrazo()));
+        }
         return task_repository.save(task);
     }
-    public ResponseEntity<Task> putTask(long id, Task task){
+
+    private boolean validaParametros(Task task, result result) {
+        if(task.getPrazo() > 0){
+            result.setErro(true);
+            result.setErroMensage("Não é possível informar um prazo para uma task livre.");
+            return false;
+        }
+        if(task.getDataFim() != null){
+            result.setErro(true);
+            result.setErroMensage("Não é possível informar data para finalizar uma task livre.");
+            return false;
+        }
+        return true;
+    }
+
+    public ResponseEntity<Task> putTask(long id, Task task, result result){
+        if(task.isTaskLivre()){
+            if(validaParametros(task, result))
+                return null;
+        }else if(task.getPrazo() > 0 ){
+            task.setDataFim(LocalDate.now().plusDays(task.getPrazo()));
+        }
         return task_repository.findById(id)
                 .map(taskToUpdate ->{
                     taskToUpdate.setTitulo(task.getTitulo());
                     taskToUpdate.setDescription(task.getDescription());
                     taskToUpdate.setStatus(task.getStatus());
-                    taskToUpdate.setDataInicio(task.getDataInicio());
                     taskToUpdate.setDataFim(task.getDataFim());
+                    taskToUpdate.setCreatedAt(task.getCreatedAt());
                     taskToUpdate.setComplete(task.getComplete());
+                    taskToUpdate.setTaskLivre(task.isTaskLivre());
+                    taskToUpdate.setPrazo(task.getPrazo());
+
                     Task updated = task_repository.save(taskToUpdate);
                     return ResponseEntity.ok().body(updated);
-                }).orElse(ResponseEntity.notFound().build());
+                }).orElse(ResponseEntity.ok().body(task_repository.save(task)));
     }
     public ResponseEntity<Object> deleteTask(long id){
         return task_repository.findById(id)
@@ -43,4 +77,11 @@ public class TaskServiceIpml {
                 }).orElse(ResponseEntity.notFound().build());
     }
 
+    public ResponseEntity<Task> setStatus(long id, statusEnum statusById) {
+        return task_repository.findById(id).map(taskToUpdate ->{
+                    taskToUpdate.setStatus(statusById);
+                    Task updated = task_repository.save(taskToUpdate);
+                    return ResponseEntity.ok().body(updated);
+                }).orElse(ResponseEntity.notFound().build());
+    }
 }

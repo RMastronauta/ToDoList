@@ -1,21 +1,21 @@
 package com.todolist.todolist.controller;
 
+import com.todolist.todolist.dto.result;
+import com.todolist.todolist.enums.statusEnum;
 import com.todolist.todolist.entity.Task;
-import com.todolist.todolist.service.TaskServiceIpml;
+import com.todolist.todolist.interfaces.ITaskService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/task")
 public class taskController {
     @Autowired
-    TaskServiceIpml task_service;
+    ITaskService task_service;
 
     @GetMapping
     @Operation(summary = "Lista todas as tarefas da lista")
@@ -30,14 +30,23 @@ public class taskController {
 
     @PostMapping
     @Operation(summary = "Adiciona uma tarefa a lista")
-    public Task postTask(@RequestBody Task task){
-        return task_service.postTask(task);
+    public ResponseEntity postTask(@RequestBody Task task){
+
+        var result = new result();
+        Task tarefa =  task_service.postTask(task, result);
+        if(result.isErro())
+            return ResponseEntity.badRequest().body(result.getErroMensage());
+        return ResponseEntity.ok().body(tarefa);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Altera uma tarefa da lista")
-    public ResponseEntity<Task> putTask(@PathVariable int id, @RequestBody Task task){
-        return task_service.putTask(id, task);
+    public ResponseEntity putTask(@PathVariable int id, @RequestBody Task task){
+        var result = new result();
+        var tarefa =  task_service.putTask(id, task, result);
+        if(result.isErro())
+            return ResponseEntity.badRequest().body(result.getErroMensage());
+        return tarefa;
     }
 
     @DeleteMapping("/{id}")
@@ -46,5 +55,48 @@ public class taskController {
 
         return task_service.deleteTask(id);
     }
+
+    @GetMapping("/v1")
+    @Operation(summary = "Lista todas as tarefas da lista")
+    public List<Task> getAllTasksV1(){
+        return task_service.getTask();
+    }
+    @GetMapping("/v1/{id}")
+    @Operation(summary = "Lista a tarefa da lista pelo id")
+    public Task getTaskByIdV1(@PathVariable long id){
+        return task_service.getTaskById(id);
+    }
+
+    @PostMapping("/v1")
+    @Operation(summary = "Adiciona uma tarefa a lista")
+    public ResponseEntity postTaskV1(@RequestBody Task task){
+        var result = new result();
+        Task tarefa =  task_service.postTask(task, result);
+        if(result.isErro())
+            return ResponseEntity.badRequest().body(result.getErroMensage());
+        return ResponseEntity.ok().body(tarefa);
+    }
+
+    @PutMapping("/v1/{id}")
+    @Operation(summary = "Altera uma tarefa da lista")
+    public ResponseEntity putTaskV1(@PathVariable int id, @RequestBody Task task){
+        var result = new result();
+        var tarefa =  task_service.putTask(id, task, result);
+        if(result.isErro())
+            return ResponseEntity.badRequest().body(result.getErroMensage());
+        return tarefa;
+    }
+
+    @DeleteMapping("/v1/{id}")
+    @Operation(summary = "Deleta a tarefa da lista")
+    public ResponseEntity<Object> deleteTaskV1(@PathVariable long id){
+
+        return task_service.deleteTask(id);
+    }
+    @PatchMapping("/v1/{id}/{status}")
+    public ResponseEntity<Task> setStatus(@PathVariable long id, @PathVariable int value){
+        return task_service.setStatus(id, statusEnum.getStatusById(value));
+    }
+
 
 }

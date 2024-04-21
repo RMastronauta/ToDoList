@@ -1,10 +1,12 @@
 package com.todolist.todolist.entity;
 
+import com.todolist.todolist.enums.statusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -25,12 +27,17 @@ public class Task {
     private String description;
     @Column(name = "complete")
     private boolean complete = false;
-    @Column(name = "dataInicio")
-    private Date dataInicio;
+    @Column(name = "createdAt")
+    private LocalDate createdAt;
     @Column(name = "dataFim")
-    private Date dataFim;
+    private LocalDate dataFim;
     @Column(name = "Status")
-    private int status;
+    @Enumerated(EnumType.ORDINAL)
+    private statusEnum status;
+    @Column(name = "isTaskLivre")
+    private boolean isTaskLivre;
+    @Column(name = "prazo")
+    private int prazo;
 
     public boolean getComplete(){
         return complete;
