@@ -2,6 +2,7 @@ package com.todolist.todolist.interfaces;
 
 import com.todolist.todolist.dto.result;
 import com.todolist.todolist.entity.Task;
+import com.todolist.todolist.enums.prioridadeEnum;
 import com.todolist.todolist.enums.statusEnum;
 import org.springframework.http.ResponseEntity;
 
@@ -14,4 +15,6 @@ public interface ITaskService {
     public ResponseEntity<Task> putTask(long id, Task task, result result);
     public ResponseEntity<Object> deleteTask(long id);
     public ResponseEntity<Task> setStatus(long id, statusEnum statusById);
+
+    ResponseEntity<Task> alterarPrioridade(long id, prioridadeEnum prioridade);
 }

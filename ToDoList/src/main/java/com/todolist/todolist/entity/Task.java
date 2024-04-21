@@ -1,5 +1,6 @@
 package com.todolist.todolist.entity;
 
+import com.todolist.todolist.enums.prioridadeEnum;
 import com.todolist.todolist.enums.statusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -38,6 +39,9 @@ public class Task {
     private boolean isTaskLivre;
     @Column(name = "prazo")
     private int prazo;
+    @Column(name = "prioridade")
+    @Enumerated(EnumType.ORDINAL)
+    private prioridadeEnum prioridade;
 
     public boolean getComplete(){
         return complete;

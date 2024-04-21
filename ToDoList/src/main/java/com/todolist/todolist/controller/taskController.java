@@ -1,6 +1,7 @@
 package com.todolist.todolist.controller;
 
 import com.todolist.todolist.dto.result;
+import com.todolist.todolist.enums.prioridadeEnum;
 import com.todolist.todolist.enums.statusEnum;
 import com.todolist.todolist.entity.Task;
 import com.todolist.todolist.interfaces.ITaskService;
@@ -93,9 +94,13 @@ public class taskController {
 
         return task_service.deleteTask(id);
     }
-    @PatchMapping("/v1/{id}/{status}")
+    @PatchMapping("/v1/status/{id}/{status}")
     public ResponseEntity<Task> setStatus(@PathVariable long id, @PathVariable int value){
         return task_service.setStatus(id, statusEnum.getStatusById(value));
+    }
+    @PatchMapping("/v1/prioridade/{id}/{status}")
+    public ResponseEntity<Task> alterarPrioridade(@PathVariable long id, @PathVariable int value){
+        return task_service.alterarPrioridade(id, prioridadeEnum.getStatusById(value));
     }
 
 
