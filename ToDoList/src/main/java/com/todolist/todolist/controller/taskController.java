@@ -1,9 +1,11 @@
 package com.todolist.todolist.controller;
 
 import com.todolist.todolist.dto.result;
+import com.todolist.todolist.dto.tipoTarefa;
 import com.todolist.todolist.enums.prioridadeEnum;
 import com.todolist.todolist.enums.statusEnum;
 import com.todolist.todolist.entity.Task;
+import com.todolist.todolist.enums.tipoEnum;
 import com.todolist.todolist.interfaces.ITaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,10 +55,8 @@ public class taskController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Deleta a tarefa da lista")
     public ResponseEntity<Object> deleteTask(@PathVariable long id){
-
         return task_service.deleteTask(id);
     }
-
     @GetMapping("/v1")
     @Operation(summary = "Lista todas as tarefas da lista")
     public List<Task> getAllTasksV1(){
@@ -84,6 +84,7 @@ public class taskController {
         var result = new result();
         var tarefa =  task_service.putTask(id, task, result);
         if(result.isErro())
+
             return ResponseEntity.badRequest().body(result.getErroMensage());
         return tarefa;
     }
@@ -102,6 +103,12 @@ public class taskController {
     public ResponseEntity<Task> alterarPrioridade(@PathVariable long id, @PathVariable int value){
         return task_service.alterarPrioridade(id, prioridadeEnum.getStatusById(value));
     }
-
-
+    @PatchMapping("/v1/complete/{id}/{status}")
+    public ResponseEntity<Task> setComplete(@PathVariable long id, @PathVariable boolean value){
+        return task_service.setComplete(id, value);
+    }
+    @PatchMapping("/v1/tipoTarefa/{id}/{tipoTarefa}")
+    public ResponseEntity<Task> setTipoTarefa(@PathVariable long id, @PathVariable tipoTarefa value){
+        return task_service.setTipoTarefa(id, value);
+    }
 }

@@ -1,7 +1,9 @@
 package com.todolist.todolist.enums;
 
+import lombok.Getter;
 import java.util.Arrays;
 
+@Getter
 public enum prioridadeEnum {
         ALTA (1, "Prioridade alta"),
         MEDIA (2, "Prioridade média"),

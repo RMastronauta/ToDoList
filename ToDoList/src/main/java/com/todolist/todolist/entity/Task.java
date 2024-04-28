@@ -2,6 +2,7 @@ package com.todolist.todolist.entity;
 
 import com.todolist.todolist.enums.prioridadeEnum;
 import com.todolist.todolist.enums.statusEnum;
+import com.todolist.todolist.enums.tipoEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -42,6 +43,9 @@ public class Task {
     @Column(name = "prioridade")
     @Enumerated(EnumType.ORDINAL)
     private prioridadeEnum prioridade;
+    @Column(name = "tipoTarefa")
+    @Enumerated(EnumType.ORDINAL)
+    private tipoEnum tipoTarefa;
 
     public boolean getComplete(){
         return complete;
