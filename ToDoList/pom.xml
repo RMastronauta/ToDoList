@@ -51,6 +51,11 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.plantuml</groupId>
+			<artifactId>plantuml</artifactId>
+			<version>8059</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
