@@ -1,7 +1,7 @@
 FROM ubuntu:latest as build
 LABEL authors="Rodrigo"
 RUN apt-get update && apt-get install openjdk-21-jdk -y
-COPY. .
+COPY . .
 
 RUN apt-get install maven -y
 RUN mvn clean install
