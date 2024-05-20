@@ -47,8 +47,19 @@ public class Task {
     @Enumerated(EnumType.ORDINAL)
     private tipoEnum tipoTarefa;
 
+    public Task(int  id, String titulo, String todoLista, boolean b, LocalDate now, LocalDate now1, int i1, prioridadeEnum prioridadeEnum, tipoEnum tipoTarefa) {
+        this.id = id;
+        this.titulo = titulo;
+        this.description = todoLista;
+        this.complete = b;
+        this.createdAt = now;
+        this.dataFim = now1;
+        this.prazo = i1;
+        this.prioridade = prioridadeEnum;
+        this.tipoTarefa = tipoTarefa;
+    }
+
     public boolean getComplete(){
         return complete;
     }
-
 }

@@ -25,8 +25,10 @@ public class TaskServiceIpml  implements ITaskService {
         return task_repository.findAll();
     }
     @Override
-    public Task getTaskById(long id){
-        return task_repository.getById(id);
+    public ResponseEntity<Task> getTaskById(long id){
+        return  task_repository.findById(id)
+                .map(task -> ResponseEntity.ok().body(task))
+                .orElse(ResponseEntity.notFound().build());
     }
     @Override
     public Task postTask(Task task, result result){

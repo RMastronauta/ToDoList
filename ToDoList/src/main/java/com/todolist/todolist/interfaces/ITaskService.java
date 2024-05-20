@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ITaskService {
     List<Task> getTask();
-    Task getTaskById(long id);
+    ResponseEntity<Task> getTaskById(long id);
     Task postTask(Task task, result result);
     ResponseEntity<Task> putTask(long id, Task task, result result);
     ResponseEntity<Object> deleteTask(long id);

@@ -27,8 +27,9 @@ public class taskController {
     }
     @GetMapping("/{id}")
     @Operation(summary = "Lista a tarefa da lista pelo id")
-    public Task getTaskById(@PathVariable long id){
-        return task_service.getTaskById(id);
+    public ResponseEntity<Task> getTaskById(@PathVariable long id){
+        var task =  task_service.getTaskById(id);
+        return task;
     }
 
     @PostMapping
@@ -64,8 +65,9 @@ public class taskController {
     }
     @GetMapping("/v1/{id}")
     @Operation(summary = "Lista a tarefa da lista pelo id")
-    public Task getTaskByIdV1(@PathVariable long id){
-        return task_service.getTaskById(id);
+    public ResponseEntity<Task> getTaskByIdV1(@PathVariable long id){
+        var task =  task_service.getTaskById(id);
+        return task;
     }
 
     @PostMapping("/v1")
