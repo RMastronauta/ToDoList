@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/task")
 public class taskController {
     @Autowired
@@ -69,6 +70,13 @@ public class taskController {
         var task =  task_service.getTaskById(id);
         return task;
     }
+    @GetMapping("/v1/status/{status}")
+    @Operation(summary = "Lista a tarefa da lista pelo status")
+    public List<Task> getTaskByStatusV1(@PathVariable int status){
+
+        var task =  task_service.getTaskByStatusV1(statusEnum.getStatusById(status));
+        return task;
+    }
 
     @PostMapping("/v1")
     @Operation(summary = "Adiciona uma tarefa a lista")
@@ -97,20 +105,20 @@ public class taskController {
 
         return task_service.deleteTask(id);
     }
-    @PatchMapping("/v1/status/{id}/{status}")
-    public ResponseEntity<Task> setStatus(@PathVariable long id, @PathVariable int value){
-        return task_service.setStatus(id, statusEnum.getStatusById(value));
+    @PutMapping("/v1/id/{id}/status/{status}")
+    public ResponseEntity<Task> setStatus(@PathVariable long id, @PathVariable int status){
+        return task_service.setStatus(id, statusEnum.getStatusById(status));
     }
     @PatchMapping("/v1/prioridade/{id}/{status}")
-    public ResponseEntity<Task> alterarPrioridade(@PathVariable long id, @PathVariable int value){
-        return task_service.alterarPrioridade(id, prioridadeEnum.getStatusById(value));
+    public ResponseEntity<Task> alterarPrioridade(@PathVariable long id, @PathVariable int status){
+        return task_service.alterarPrioridade(id, prioridadeEnum.getStatusById(status));
     }
-    @PatchMapping("/v1/complete/{id}/{status}")
-    public ResponseEntity<Task> setComplete(@PathVariable long id, @PathVariable boolean value){
-        return task_service.setComplete(id, value);
+    @PatchMapping("/v1/complete/{id}/{complete}")
+    public ResponseEntity<Task> setComplete(@PathVariable long id, @PathVariable boolean complete){
+        return task_service.setComplete(id, complete);
     }
     @PatchMapping("/v1/tipoTarefa/{id}/{tipoTarefa}")
-    public ResponseEntity<Task> setTipoTarefa(@PathVariable long id, @PathVariable tipoTarefa value){
-        return task_service.setTipoTarefa(id, value);
+    public ResponseEntity<Task> setTipoTarefa(@PathVariable long id, @PathVariable tipoTarefa tipoTarefa){
+        return task_service.setTipoTarefa(id, tipoTarefa);
     }
 }

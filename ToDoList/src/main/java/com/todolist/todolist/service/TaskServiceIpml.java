@@ -34,13 +34,13 @@ public class TaskServiceIpml  implements ITaskService {
     public Task postTask(Task task, result result){
         task.setCreatedAt(LocalDate.now());
 
-        if(task.getTipoTarefa().getCodigo() == 3){ //Task livre
-            if(validaParametros(task, result))
+        if(task.getTipoTarefa().getCodigo() == 2){ //Task livre
+            if(!validaParametros(task, result))
                 return null;
-        }else if(task.getTipoTarefa().getCodigo() == 2 && task.getPrazo() > 0){
+        }else if(task.getTipoTarefa().getCodigo() == 1 && task.getPrazo() > 0){
             task.setDataFim(LocalDate.now().plusDays(task.getPrazo()));
         }else{
-            if (task.getTipoTarefa().getCodigo() == 1 && !validaDataFim(task, result)){
+            if (task.getTipoTarefa().getCodigo() == 0 && !validaDataFim(task, result)){
                 return null;
             }
         }
@@ -105,11 +105,10 @@ public class TaskServiceIpml  implements ITaskService {
     }
     @Override
     public ResponseEntity<Task> setStatus(long id, statusEnum statusById) {
-        return task_repository.findById(id).map(taskToUpdate ->{
-                    taskToUpdate.setStatus(statusById);
-                    Task updated = task_repository.save(taskToUpdate);
-                    return ResponseEntity.ok().body(updated);
-                }).orElse(ResponseEntity.notFound().build());
+        Task task = task_repository.getById(id);
+        task.setStatus(statusById);
+        Task updated = task_repository.save(task);
+        return updated != null ? ResponseEntity.ok().body(updated) : ResponseEntity.notFound().build();
     }
     @Override
     public ResponseEntity<Task> alterarPrioridade(long id, prioridadeEnum prioridade){
@@ -134,6 +133,11 @@ public class TaskServiceIpml  implements ITaskService {
         setParametrosTipoTarefa(task, statusById);
         Task updated = task_repository.save(task);
         return updated != null ? ResponseEntity.ok().body(updated) : ResponseEntity.notFound().build();
+    }
+
+    @Override
+    public List<Task> getTaskByStatusV1(statusEnum status) {
+        return task_repository.findAllByStatus(status);
     }
 
     private void setParametrosTipoTarefa(Task task, tipoTarefa statusById) {

@@ -5,9 +5,9 @@ import java.util.Arrays;
 
 @Getter
 public enum tipoEnum {
-    DATA (1, "Data"),
-    PRAZO (2, "Prazo"),
-    LIVRE (3, "Livre");
+    DATA (0, "Data"),
+    PRAZO (1, "Prazo"),
+    LIVRE (2, "Livre");
 
     private int codigo;
     private String descricao;

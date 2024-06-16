@@ -5,9 +5,9 @@ import java.util.Arrays;
 
 @Getter
 public enum prioridadeEnum {
-        ALTA (1, "Prioridade alta"),
-        MEDIA (2, "Prioridade média"),
-        BAIXA (3, "Prioridade baixa");
+        ALTA (0, "Prioridade alta"),
+        MEDIA (1, "Prioridade média"),
+        BAIXA (2, "Prioridade baixa");
 
         private int id;
         private String descricao;

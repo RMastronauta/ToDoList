@@ -1,0 +1,5 @@
+export const TaskStatus = {
+    BACKLOG :'BACKLOG',
+    INICIALIZADA : 'INICIALIZADA',
+    FINALIZADA : 'FINALIZADA'
+};
