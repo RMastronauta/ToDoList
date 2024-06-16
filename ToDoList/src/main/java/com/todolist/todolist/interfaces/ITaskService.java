@@ -21,4 +21,6 @@ public interface ITaskService {
     ResponseEntity<Task> setComplete(long id, boolean complete);
 
     ResponseEntity<Task> setTipoTarefa(long id, tipoTarefa statusById);
+
+    List<Task> getTaskByStatusV1(statusEnum status);
 }
