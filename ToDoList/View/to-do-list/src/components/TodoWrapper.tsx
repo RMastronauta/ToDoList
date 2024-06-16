@@ -19,23 +19,23 @@ const TodoWrapper = () => {
                 <h1 style={styles.h1}>Lista de Tarefas</h1>
                 <button onClick={openModal} style={styles.addButton}>+ Adicionar Tarefa</button>
             </div>
-            <Board />
-            {isModalOpen && <NewTaskModal onClose={closeModal} />} {/* Renderize o modal apenas se isModalOpen for verdadeiro */}
+            <Board/>
+            {isModalOpen && <NewTaskModal onClose={closeModal} />}
         </div>
     );
 };
 
 const styles = {
     h1: {
-        textAlign: 'center',
-        marginTop: '20px',
+        margin: '20px auto',
         color: '#333',
     },
     header: {
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
         marginBottom: '20px',
+        position: 'relative',
     },
     addButton: {
         padding: '10px 20px',
@@ -45,6 +45,8 @@ const styles = {
         borderRadius: '5px',
         cursor: 'pointer',
         fontSize: '16px',
+        position: 'absolute',
+        right: '10px',
     },
 };
 export default TodoWrapper;

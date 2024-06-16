@@ -40,7 +40,7 @@ const EditModal = ({ card, onClose }) => {
 
             if (response.id > 0) {
                 setShowSuccessMessage(true);
-                setMensagemSucesso('Tarefa criada com sucesso!');
+                setMensagemSucesso('Tarefa editada com sucesso!');
             } else {
                 throw new Error('Erro ao salvar a tarefa');
             }
@@ -63,7 +63,7 @@ const EditModal = ({ card, onClose }) => {
 
             if (response.id > 0) {
                 setShowSuccessMessage(true);
-                setMensagemSucesso('Tarefa avançada com sucesso!');
+                setMensagemSucesso('A tarefa avançou para ' + response.status + ' com sucesso!');
             } else {
                 throw new Error('Erro ao avançar a tarefa');
             }
@@ -86,13 +86,13 @@ const EditModal = ({ card, onClose }) => {
 
             if (response.id > 0) {
                 setShowSuccessMessage(true);
-                setMensagemSucesso('Tarefa avançada com sucesso!');
+                setMensagemSucesso('A tarefa retornou para ' + response.status + ' com sucesso!');
             } else {
-                throw new Error('Erro ao avançar a tarefa');
+                throw new Error('Erro ao retroceder a tarefa');
             }
         } catch (error) {
             setShowErrorMessage(true);
-            setMensagemErro('Erro ao avançar a tarefa: ' + error);
+            setMensagemErro('Erro ao retroceder a tarefa: ' + error);
         } finally {
             setTimeout(() => {
                 setShowSuccessMessage(false);
