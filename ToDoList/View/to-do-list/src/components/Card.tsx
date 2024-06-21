@@ -19,7 +19,7 @@ const Card = ({ tasks }: { tasks: ITask[] }) => {
             // Reduz a barra de progresso de 100% para 0% em 2 segundos
             const decreaseProgress = () => {
                 interval = setInterval(() => {
-                    setProgress(prev => prev - 1); // Reduz 1% a cada 10ms
+                    setProgress(prev => prev - 1); // Reduz 1% a cada 20ms
                 }, 20); // Intervalo de 20ms
             };
 
@@ -57,6 +57,7 @@ const Card = ({ tasks }: { tasks: ITask[] }) => {
         setIsModalOpen(false);
         setSelectedTask(null);
     };
+
     const getPriorityHoverColor = (priority: string) => {
         switch (priority) {
             case 'ALTA':
@@ -69,27 +70,29 @@ const Card = ({ tasks }: { tasks: ITask[] }) => {
                 return '#ccc';
         }
     };
-    const formatDate = (dateString: string): string => {
-      const date = new Date(dateString);
-      const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-      const day = String(localDate.getDate()).padStart(2, '0');
-      const month = String(localDate.getMonth() + 1).padStart(2, '0'); // Janeiro é 0!
-      const year = localDate.getFullYear();
-      return `${day}/${month}/${year}`;
-    };
 
+    const formatDate = (dateString: string): string => {
+        const date = new Date(dateString);
+        const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+        const day = String(localDate.getDate()).padStart(2, '0');
+        const month = String(localDate.getMonth() + 1).padStart(2, '0'); // Janeiro é 0!
+        const year = localDate.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
 
     const calculateDaysRemaining = (dateString: string): number => {
-      const currentDate = new Date();
-      const targetDate = new Date(dateString);
-      const differenceInMillis = targetDate.getTime() - currentDate.getTime();
-      const differenceInDays = Math.ceil(differenceInMillis / (1000 * 60 * 60 * 24));
-      return differenceInDays;
+        const currentDate = new Date();
+        const targetDate = new Date(dateString);
+        const differenceInMillis = targetDate.getTime() - currentDate.getTime();
+        const differenceInDays = Math.ceil(differenceInMillis / (1000 * 60 * 60 * 24));
+        return differenceInDays;
     };
+
     const setColorDate = (dateString: string): string => {
-        if(calculateDaysRemaining(dateString) <= 2){
-          return 'red';
+        if (calculateDaysRemaining(dateString) <= 2) {
+            return 'red';
         }
+        return 'inherit'; // Default color if more than 2 days
     };
 
     const reloadPage = () => {
@@ -116,22 +119,31 @@ const Card = ({ tasks }: { tasks: ITask[] }) => {
                         onMouseEnter={(e) => e.currentTarget.style.borderColor = getPriorityHoverColor(task.prioridade)}
                         onMouseLeave={(e) => e.currentTarget.style.borderColor = '#ccc'}
                     >
-                        <div style={{ position: 'absolute', top: '10px', left: '10px', display: 'flex', alignItems: 'center' }}>
-                            <h4 style={{ margin: 0 }}>{task.titulo}</h4>
-                            <span style={{ marginLeft: '10px', fontSize: '0.8em', color: getPriorityHoverColor(task.prioridade) }}>{task.prioridade}</span>
-
-                        {task.tipoTarefa === TaskTypes.DATA && (
-                            <span style={{ marginLeft: '240px', color: setColorDate(task.dataFim)}}>
-                              {formatDate(task.dataFim)}
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexWrap: 'wrap',
+                            width: '100%',
+                            maxWidth: '100%'
+                        }}>
+                            <h4 style={{ margin: 0, flexShrink: 0 }}>{task.titulo}</h4>
+                            <span style={{ marginLeft: '10px', fontSize: '0.8em', flexShrink: 0, color: getPriorityHoverColor(task.prioridade) }}>
+                                {task.prioridade}
                             </span>
-                        )}
-                          {task.tipoTarefa === TaskTypes.DIAS && (
-                            <span style={{ marginLeft: '260px', color: setColorDate(task.dataFim)}}>
-                              {calculateDaysRemaining(task.dataFim)} dias
-                            </span>
-                        )}
+                            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                                {task.tipoTarefa === TaskTypes.DATA && (
+                                    <span style={{ color: setColorDate(task.dataFim) }}>
+                                        {formatDate(task.dataFim)}
+                                    </span>
+                                )}
+                                {task.tipoTarefa === TaskTypes.DIAS && (
+                                    <span style={{ color: setColorDate(task.dataFim) }}>
+                                        {calculateDaysRemaining(task.dataFim)} dias
+                                    </span>
+                                )}
+                            </div>
                         </div>
-                        <p style={{marginTop : '20px'}}>{task.description}</p>
+                        <p style={{ marginTop: '20px' }}>{task.description}</p>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                             <FaTrash onClick={(e) => {
                                 e.stopPropagation();
@@ -183,7 +195,7 @@ const Card = ({ tasks }: { tasks: ITask[] }) => {
                         }}>
                             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                                 <FaExclamationTriangle style={{ marginRight: '10px', color: 'red', fontSize: '1.5em' }} />
-                                <div style={{  width: '1px', height: '20px', backgroundColor: '#ccc', marginRight: '10px' }}></div>
+                                <div style={{ width: '1px', height: '20px', backgroundColor: '#ccc', marginRight: '10px' }}></div>
                                 <div>
                                     <div style={{
                                         width: '100%',
@@ -194,8 +206,9 @@ const Card = ({ tasks }: { tasks: ITask[] }) => {
                                     }}>
                                         <div style={{
                                             height: '100%',
-                                            width: '100%',
+                                            width: `${progress}%`,
                                             backgroundColor: 'red',
+                                            transition: 'width 2s linear'
                                         }} />
                                     </div>
                                     <p style={{ textAlign: 'center' }}>Tarefa deletada com sucesso!</p>
