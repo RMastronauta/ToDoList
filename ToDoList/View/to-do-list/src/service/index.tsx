@@ -3,7 +3,7 @@ import {TaskType} from "../../types/TaskType";
 import {ITask} from "./entity/ITask";
 function setHttpServer(): AxiosInstance {
     return axios.create({
-        baseURL: "http://localhost:8080/api",
+        baseURL: "https://todolist-mqow.onrender.com/api",
     });
 }
 
