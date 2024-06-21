@@ -4,13 +4,19 @@ import {FaCheckCircle, FaTimes} from 'react-icons/fa';
 import { TaskTypes } from '../enums/taskTypes.tsx';
 import {onAdvanceTask, postTask} from '../service/index.tsx';
 import {TaskStatus} from "../enums/taskStatus.tsx";
-
+    const calculateDaysRemaining = (dateString: string): number => {
+          const currentDate = new Date();
+          const targetDate = new Date(dateString);
+          const differenceInMillis = targetDate.getTime() - currentDate.getTime();
+          const differenceInDays = Math.ceil(differenceInMillis / (1000 * 60 * 60 * 24));
+          return differenceInDays;
+        };
 const EditModal = ({ card, onClose }) => {
     const [titulo, setTitulo] = useState(card.titulo);
     const [description, setDescription] = useState(card.description);
     const [taskType, setTaskType] = useState(card.tipoTarefa);
     const [endDate, setEndDate] = useState(card.dataFim || '');
-    const [days, setDays] = useState(card.days || '');
+    const [days, setDays] = useState(calculateDaysRemaining(card.dataFim) || '');
     const [priority, setPriority] = useState(card.prioridade);
     const [status, setStatus] = useState(card.status);
     const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +33,7 @@ const EditModal = ({ card, onClose }) => {
                 titulo: titulo,
                 description: description,
                 complete: false,
-                createdAt: card.createdAt, // Manter a data de criação original
+                createdAt: card.createdAt,
                 dataFim: taskType === TaskTypes.DATA ? endDate : null,
                 taskLivre: taskType === TaskTypes.LIVRE,
                 prazo: taskType === TaskTypes.DIAS ? days : null,
@@ -293,9 +299,9 @@ const styles = {
         borderRadius: '5px',
         border: '1px solid #ccc',
         fontSize: '16px',
-        minHeight: '120px', // Altura mínima para o textarea
-        resize: 'none', // Impede o redimensionamento do textarea pelo usuário
-        boxSizing: 'border-box', // Garante que o padding e a borda não alterem o tamanho total do elemento
+        minHeight: '120px', 
+        resize: 'none',
+        boxSizing: 'border-box',
     },
     status: {
         padding: '10px',

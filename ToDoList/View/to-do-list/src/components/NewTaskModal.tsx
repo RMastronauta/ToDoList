@@ -24,7 +24,7 @@ const NewTaskModal = ({ onClose }) => {
                 complete: false,
                 createdAt: getCurrentDate(),
                 dataFim: taskType === TaskTypes.DATA ? endDate : null,
-                status: 0, // Defina o status conforme necessário
+                status: 0,
                 taskLivre: taskType === TaskTypes.LIVRE,
                 prazo: taskType === TaskTypes.DIAS ? parseInt(days) : null,
                 prioridade: getPriorityValue(priority),
@@ -34,15 +34,11 @@ const NewTaskModal = ({ onClose }) => {
             const response = await postTask(data);
             debugger
             if (response.id > 0) {
-                setShowSuccessMessage(true); // Mostrar mensagem de sucesso
-
-                // Esconder mensagem de sucesso após 3 segundos
-
+                setShowSuccessMessage(true);
             } else {
                 throw new Error('Erro ao salvar a tarefa');
             }
         } catch (error) {
-            console.error('Erro ao salvar a tarefa:', error);
             setShowErrorMessage(true);
         } finally {
             setTimeout(() => {

@@ -3,6 +3,7 @@ import { FaEdit, FaTrash, FaExclamationTriangle } from 'react-icons/fa';
 import EditModal from './EditModal.tsx';
 import { ITask } from '../service/entity/ITask';
 import { deleteTasks } from '../service/index.tsx';
+import { TaskTypes } from '../enums/taskTypes.tsx';
 
 const Card = ({ tasks }: { tasks: ITask[] }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,25 +57,38 @@ const Card = ({ tasks }: { tasks: ITask[] }) => {
         setIsModalOpen(false);
         setSelectedTask(null);
     };
-
-    const onAdvance = (id: number) => {
-        console.log(`Avançando tarefa com id: ${id}`);
-    };
-
-    const onRecede = (id: number) => {
-        console.log(`Retrocedendo tarefa com id: ${id}`);
-    };
-
     const getPriorityHoverColor = (priority: string) => {
         switch (priority) {
             case 'ALTA':
-                return '#ffcccc'; // Border light red on hover
+                return '#FF0000';
             case 'MEDIA':
-                return '#ffffcc'; // Border light yellow on hover
+                return '#FFD700';
             case 'BAIXA':
-                return '#ccffcc'; // Border light green on hover
+                return '#008000';
             default:
-                return '#ccc'; // Default border color
+                return '#ccc';
+        }
+    };
+    const formatDate = (dateString: string): string => {
+      const date = new Date(dateString);
+      const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+      const day = String(localDate.getDate()).padStart(2, '0');
+      const month = String(localDate.getMonth() + 1).padStart(2, '0'); // Janeiro é 0!
+      const year = localDate.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+
+
+    const calculateDaysRemaining = (dateString: string): number => {
+      const currentDate = new Date();
+      const targetDate = new Date(dateString);
+      const differenceInMillis = targetDate.getTime() - currentDate.getTime();
+      const differenceInDays = Math.ceil(differenceInMillis / (1000 * 60 * 60 * 24));
+      return differenceInDays;
+    };
+    const setColorDate = (dateString: string): string => {
+        if(calculateDaysRemaining(dateString) <= 2){
+          return 'red';
         }
     };
 
@@ -104,9 +118,20 @@ const Card = ({ tasks }: { tasks: ITask[] }) => {
                     >
                         <div style={{ position: 'absolute', top: '10px', left: '10px', display: 'flex', alignItems: 'center' }}>
                             <h4 style={{ margin: 0 }}>{task.titulo}</h4>
-                            <span style={{ marginLeft: '10px', fontSize: '0.8em', color: '#777' }}>{task.prioridade}</span>
+                            <span style={{ marginLeft: '10px', fontSize: '0.8em', color: getPriorityHoverColor(task.prioridade) }}>{task.prioridade}</span>
+
+                        {task.tipoTarefa === TaskTypes.DATA && (
+                            <span style={{ marginLeft: '240px', color: setColorDate(task.dataFim)}}>
+                              {formatDate(task.dataFim)}
+                            </span>
+                        )}
+                          {task.tipoTarefa === TaskTypes.DIAS && (
+                            <span style={{ marginLeft: '260px', color: setColorDate(task.dataFim)}}>
+                              {calculateDaysRemaining(task.dataFim)} dias
+                            </span>
+                        )}
                         </div>
-                        <p>{task.description}</p>
+                        <p style={{marginTop : '20px'}}>{task.description}</p>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                             <FaTrash onClick={(e) => {
                                 e.stopPropagation();
@@ -138,7 +163,7 @@ const Card = ({ tasks }: { tasks: ITask[] }) => {
                         left: 0,
                         width: '100%',
                         height: '100%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Overlay semitransparente preto
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
                         zIndex: 1000,
                         display: 'flex',
                         justifyContent: 'center',
@@ -146,7 +171,7 @@ const Card = ({ tasks }: { tasks: ITask[] }) => {
                     }}>
                         <div style={{
                             width: '100%',
-                            maxWidth: '600px', // Largura máxima do modal de alerta
+                            maxWidth: '600px',
                             backgroundColor: '#fff',
                             color: '#000',
                             borderRadius: '5px',
@@ -162,15 +187,15 @@ const Card = ({ tasks }: { tasks: ITask[] }) => {
                                 <div>
                                     <div style={{
                                         width: '100%',
-                                        height: '5px', // Altura da barra de progresso
-                                        backgroundColor: 'red', // Cor da barra de progresso
-                                        marginBottom: '5px', // Espaço abaixo da barra de progresso
+                                        height: '5px',
+                                        backgroundColor: 'red',
+                                        marginBottom: '5px',
                                         overflow: 'hidden'
                                     }}>
                                         <div style={{
                                             height: '100%',
                                             width: '100%',
-                                            backgroundColor: 'red', // Cor da barra de progresso
+                                            backgroundColor: 'red',
                                         }} />
                                     </div>
                                     <p style={{ textAlign: 'center' }}>Tarefa deletada com sucesso!</p>
