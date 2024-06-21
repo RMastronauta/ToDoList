@@ -41,7 +41,6 @@ const EditModal = ({ card, onClose }) => {
                 tipoTarefa: getTaskTypeValue(taskType),
                 status: status
             };
-            debugger
             const response = await postTask(data);
 
             if (response.id > 0) {

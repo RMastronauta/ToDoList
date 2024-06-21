@@ -32,7 +32,6 @@ const NewTaskModal = ({ onClose }) => {
             };
 
             const response = await postTask(data);
-            debugger
             if (response.id > 0) {
                 setShowSuccessMessage(true);
             } else {

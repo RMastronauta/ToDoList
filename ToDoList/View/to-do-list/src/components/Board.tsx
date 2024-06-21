@@ -20,7 +20,6 @@ const Board = () => {
 
         fetchData();
     }, []);
-    console.log(resultado);
     return (
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
             {statuses.map((status) => (
